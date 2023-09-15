@@ -22,6 +22,7 @@ import javax.swing.JTextArea;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JComboBox;
 
 public class FrmLogin extends JFrame {
@@ -87,8 +88,42 @@ public class FrmLogin extends JFrame {
 	
 	private JTextField txtClave;
 	
+	 private String leerUsuario() {
+		 if (!txtUsuario.getText().matches("[A-Za-z0-9_]+[@][a-z0-9]+[.][a-z]{2,3}")) {
+			 JOptionPane.showMessageDialog(null, "Usuario incorrecto");
+		return null;
+		 }
+	
+		  return txtUsuario.getText();
+	 }
 	
 	void registrar() {
+		String usuario = txtUsuario.getText();
+		String clave = txtClave.getText();
+		EntityManagerFactory fabrica = Persistence.createEntityManagerFactory("jpa_sesion");
+		 
+		  
+		 EntityManager em= fabrica.createEntityManager();
+		 
 		
+		 String jpql = "select u from Usuario u where u.usr_usua = :xusr and u.cla_usua = :xcla";
+		 try {
+			Usuario u =
+					 em.createQuery(jpql,  Usuario.class).
+					 setParameter("xusr", "admin@ciberfarma.com").
+					 setParameter("xcla", "super").
+					 getSingleResult();
+			 
+			
+			 
+				 FrmManteProd v = new FrmManteProd();
+				 v.setVisible(true);
+				 
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null, "Usuario o clave incorrecto");
+		}
+		 
+		 
+		 em.close();
 	}
 }
